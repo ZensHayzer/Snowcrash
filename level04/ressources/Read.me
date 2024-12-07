@@ -1,0 +1,13 @@
+We have a perl script that take an entry
+We can inject code
+
+Plus, we can see the 's', at owner permissions, that mean we can execute script with flag04 permissions
+"-rwsr-sr-x 1 flag04 level04 152 Mar  5  2016 level04.pl"
+
+In script we have :
+"localhost:4747"
+
+And an 'x' variable, so we can use curl to send our injection :
+"curl localhost:4747?x=%3Bgetflag"
+
+%3B mean ;, with this, we can send the command to the program with ';' to execute our getflag command after "echo"
